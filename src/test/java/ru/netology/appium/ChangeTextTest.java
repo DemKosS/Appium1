@@ -19,8 +19,9 @@ public class ChangeTextTest {
     public void setUp() throws MalformedURLException {
         DesiredCapabilities desiredCapabilities = new DesiredCapabilities();
         desiredCapabilities.setCapability("platformName", "Android");
-        desiredCapabilities.setCapability("appium:deviceName", "Some name");
-        desiredCapabilities.setCapability("appium:app", "C:\\Users\\Lenovo\\Desktop\\2.2 UI Automator\\sample\\app\\build\\intermediates\\apk\\debug\\app-debug.apk");
+        desiredCapabilities.setCapability("appium:deviceName", "SomeOne");
+        desiredCapabilities.setCapability("appium:appPackage", "ru.netology.testing.uiautomator");
+        desiredCapabilities.setCapability("appium:appActivity", "ru.netology.testing.uiautomator.MainActivity");
         desiredCapabilities.setCapability("appium:ensureWebviewsHavePages", true);
         desiredCapabilities.setCapability("appium:nativeWebScreenshot", true);
         desiredCapabilities.setCapability("appium:newCommandTimeout", 3600);
@@ -29,6 +30,7 @@ public class ChangeTextTest {
         URL remoteUrl = new URL("http://127.0.0.1:4723/wd/hub");
 
         driver = new AndroidDriver(remoteUrl, desiredCapabilities);
+
     }
 
     @Test
