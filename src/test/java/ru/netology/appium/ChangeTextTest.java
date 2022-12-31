@@ -1,21 +1,29 @@
 package ru.netology.appium;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import io.appium.java_client.MobileElement;
 import io.appium.java_client.android.AndroidDriver;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import io.appium.java_client.android.AndroidDriver;
+
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+
 public class ChangeTextTest {
 
     private AndroidDriver driver;
-
-    @BeforeEach
+    private AppScreen screen;
+    @BeforeAll
     public void setUp() throws MalformedURLException {
         DesiredCapabilities desiredCapabilities = new DesiredCapabilities();
         desiredCapabilities.setCapability("platformName", "Android");
@@ -30,33 +38,31 @@ public class ChangeTextTest {
         URL remoteUrl = new URL("http://127.0.0.1:4723/wd/hub");
 
         driver = new AndroidDriver(remoteUrl, desiredCapabilities);
-
+        screen = new AppScreen(driver);
     }
 
     @Test
+    @Order(1)
     public void sampleTest() {
-        MobileElement el1 = (MobileElement) driver.findElementById("ru.netology.testing.uiautomator:id/userInput");
-        el1.click();
-        el1.sendKeys("   ");
-        MobileElement el2 = (MobileElement) driver.findElementById("ru.netology.testing.uiautomator:id/buttonChange");
-        el2.click();
-        MobileElement el3 = (MobileElement) driver.findElementById("textToBeChanged");
-        Assertions.assertEquals("Привет, UiAutomator!", el3.getText());
-    }
+            String textBefore = screen.textToBeChanged.getText();
+            screen.inputField.sendKeys(" ");
+            screen.buttonChange.click();
+            String textAfter = screen.textToBeChanged.getText();
+            assertEquals(textBefore, textAfter);
+        }
 
     @Test
-    public void sampleTest2() {
-        MobileElement el1 = (MobileElement) driver.findElementById("ru.netology.testing.uiautomator:id/userInput");
-        el1.click();
-        el1.sendKeys("Finish");
-        MobileElement el2 = (MobileElement) driver.findElementById("ru.netology.testing.uiautomator:id/buttonActivity");
-        el2.click();
-        MobileElement el3 = (MobileElement) driver.findElementById("ru.netology.testing.uiautomator:id/text");
-        Assertions.assertEquals("Finish", el3.getText());
+    @Order(2)
+    public void testOpenNewActivity() {
+        String textToSet = "Netology";
+        screen.inputField.sendKeys(textToSet);
+        screen.buttonActivity.click();
+        String textAfter = screen.activityText.getText();
+        assertEquals(textToSet, textAfter);
     }
 
 
-    @AfterEach
+    @AfterAll
     public void tearDown() {
         driver.quit();
     }
